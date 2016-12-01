@@ -1,10 +1,3 @@
 var prod       = window.location.hostname != 'localhost';
-// if (prod) {
-//   routes = {
 
-//   }
-// } else {
-//   routes = {
-
-//   }
-// }
+base = prod ? 'http://yafo.herokuapp.com/api' : 'http://localhost:9090/api'

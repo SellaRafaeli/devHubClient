@@ -1,0 +1,27 @@
+<div id='submitter'>
+  <h3> Submit </h3>
+  <input v-model=url placeholder='url'>
+  <input v-model=title placeholder='title'>
+  <button @click='submit()'>Submit</button>
+</div>
+
+<script>
+  var submitter = new Vue({
+    el: '#submitter',
+    data: {
+      url: '',
+      title: '',
+    }, 
+    methods: {
+      submit: function() {
+        if (!(this.url && this.title)) return alert('Data missing.');
+        $.post(base+'/posts',{url: this.url, title: this.title})
+         .done( (res) => {
+            this.title = ''; this.url = '';
+            document.location = '#posts';
+            pl.posts.unshift(res);
+         })
+      }
+    }
+  })  
+</script>

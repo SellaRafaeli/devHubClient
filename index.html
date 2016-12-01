@@ -5,6 +5,7 @@
   <script src='/js/lib/vue-2.1.3.min.js'></script>
   <script src='/js/lib.js'></script>
   <script src='/js/nav.js'></script>
+  <script src='/js/api.js'></script>
   <title>Vue2 HN</title>
 </head>
 
@@ -13,6 +14,7 @@ section {
   border:1px solid red; 
   display: none 
 }
+.noDisplay {display: none}
 </style>
 <body>
 
@@ -20,12 +22,16 @@ section {
   <section id='posts'></section>
   <section id='comments'></section>
   <section id='me'></section>
+  <section id='login'></section>
+  <section id='submit'></section>
 
 <script> 
   getHTML('pages/header.html', '#header'); 
   getHTML('pages/posts.html', '#posts'); 
   getHTML('pages/comments.html', '#comments'); 
   getHTML('pages/me.html', '#me'); 
+  getHTML('pages/login.html', '#login'); 
+  getHTML('pages/submit.html', '#submit'); 
 </script>
 </body>
 </html>

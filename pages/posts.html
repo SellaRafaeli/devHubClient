@@ -6,7 +6,7 @@
       @click="toggle">
       {{post.title}}      
     </div>
-    <a :href='"#comments?post_id="+post.title'>click</a>
+    <a :href='"#comments?p="+post._id'>comments</a>
   </li>
 </script>
 
@@ -48,8 +48,8 @@ pl = postsList = new Vue({
     }, 
     methods: {
       update(){
-        $.getJSON('/mock_data/posts.json').done(function(res){
-          pl.posts = res.posts;
+        $.getJSON(base+'/posts').done(function(res){
+          pl.posts = res.items;
         });
       }
     }
