@@ -1,0 +1,88 @@
+<!-- item template -->
+<script type="text/x-template" id="single_comment">
+  <li>
+    <div
+      :class="{bold: isFolder}"
+      @click="toggle"
+      @dblclick="changeType">
+      {{model._id}}
+      {{model.name}}
+      <span v-if="isFolder">[{{open ? '-' : '+'}}]</span>
+    </div>
+    <ul v-show="open" v-if="isFolder">
+      <single_comment
+        class="item"
+        v-for="model in model.children"
+        :model="model">
+      </single_comment>
+      <li class="add" @click="addChild">+</li>
+    </ul>
+  </li>
+</script>
+
+<!-- markup -->
+<ul id="demo">
+  <h3>{{post_id}}</h3>
+  <single_comment v-for="comment in comments"
+    class="item"
+    :model="comment">
+  </single_comment>
+</ul>
+
+<script>
+// define the item component
+Vue.component('single_comment', {
+  template: '#single_comment',
+  props: {
+    model: Object
+  },
+  data: function () {
+    return {
+      open: false
+    }
+  },
+  computed: {
+    isFolder: function () {
+      return this.model.children &&
+        this.model.children.length
+    }
+  },
+  methods: {
+    toggle: function () {
+      if (this.isFolder) {
+        this.open = !this.open
+      }
+    },
+    changeType: function () {
+      if (!this.isFolder) {
+        Vue.set(this.model, 'children', [])
+        this.addChild()
+        this.open = true
+      }
+    },
+    addChild: function () {
+      this.model.children.push({
+        name: 'new stuff'
+      })
+    }
+  }
+})
+
+// boot up the demo
+cl = commentsList = new Vue({
+  el: '#demo',
+  data: {
+    comments: [],
+    post_id: null
+  }
+})  
+
+function commentsUpdate() {
+  $.getJSON('/mock_data/comments.json').success((res) => {
+    cl.comments = res.comments;
+    cl.post_id = qs().post_id;
+  });
+};
+
+commentsUpdate();
+</script>

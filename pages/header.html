@@ -1,0 +1,16 @@
+<div id='header-bar'>
+  <h3> DevHub Client </h3>
+  <a href='#posts'>Posts</a>
+  <a href='#comments'>Comments</a>
+  <a href='#me' v-if='user.id'>{{ user.name }}</a>
+  <a href='#login' v-else>Login</a>
+</div>
+
+<script>
+  var header = new Vue({
+    el: '#header-bar',
+    data: {
+      user: {id: null, name: null}
+    }
+  })  
+</script>

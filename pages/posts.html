@@ -1,0 +1,54 @@
+<!-- item template -->
+<script type="text/x-template" id="single_post_template">
+  <li>
+    <div
+      :class="{bold: false}"
+      @click="toggle">
+      {{post.title}}      
+    </div>
+    <a :href='"#comments?post_id="+post.title'>click</a>
+  </li>
+</script>
+
+<div id='postsList'>  
+  <ul>  
+    <single_post v-for='post in posts'
+      class="single_post_class"
+      :post="post">
+    </single_post>
+  </ul>
+</div>
+<h1> Posts! </h1>
+
+<script>
+Vue.component('single_post', {
+  template: '#single_post_template',
+  props: {
+    post: Object
+  },
+  data: function () {
+    return {
+      title: false,
+    }
+  },
+  computed: {
+  },
+  methods: {
+    toggle: function () { 
+      this.upvoted = !this.upvoted; 
+    },
+  }
+})
+</script>
+
+<script>
+var posts = [{title: 'title1'}, {title: 'title2'}, {title: 'title3'}];
+
+postsList = new Vue({
+    el: '#postsList',
+    data: {
+      posts: posts
+    }
+})  
+
+</script>
