@@ -74,15 +74,17 @@ cl = commentsList = new Vue({
   data: {
     comments: [],
     post_id: null
+  },
+  methods: {
+    update(){
+      $.getJSON('/mock_data/comments.json').done((res)=>{
+        cl.comments = res.comments;
+        cl.post_id = qs().post_id;
+      });
+    }
   }
 })  
 
-function commentsUpdate() {
-  $.getJSON('/mock_data/comments.json').success((res) => {
-    cl.comments = res.comments;
-    cl.post_id = qs().post_id;
-  });
-};
-
+commentsUpdate = function() { cl.update(); }
 commentsUpdate();
 </script>

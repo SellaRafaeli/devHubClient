@@ -10,7 +10,8 @@
   var header = new Vue({
     el: '#header-bar',
     data: {
-      user: {id: null, name: null}
+      user: {id: null, name: null},
+      prod: (window.location.hostname != 'localhost')
     }
   })  
 </script>

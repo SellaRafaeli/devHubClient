@@ -18,7 +18,6 @@
     </single_post>
   </ul>
 </div>
-<h1> Posts! </h1>
 
 <script>
 Vue.component('single_post', {
@@ -42,13 +41,19 @@ Vue.component('single_post', {
 </script>
 
 <script>
-var posts = [{title: 'title1'}, {title: 'title2'}, {title: 'title3'}];
-
-postsList = new Vue({
+pl = postsList = new Vue({
     el: '#postsList',
     data: {
-      posts: posts
+      posts: []
+    }, 
+    methods: {
+      update(){
+        $.getJSON('/mock_data/posts.json').done(function(res){
+          pl.posts = res.posts;
+        });
+      }
     }
-})  
+});  
 
+pl.update();
 </script>
