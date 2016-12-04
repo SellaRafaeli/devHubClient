@@ -4,7 +4,8 @@
     <div
       :class="{bold: false}"
       @click="toggle">
-      {{post.title}}      
+      {{post.title}}  
+      ({{post.user.name}})    
     </div>
     <a :href='"#comments?p="+post._id'>comments</a>
   </li>
