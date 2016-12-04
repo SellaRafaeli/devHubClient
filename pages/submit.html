@@ -15,7 +15,8 @@
     methods: {
       submit: function() {
         if (!(this.url && this.title)) return alert('Data missing.');
-        $.post(base+'/posts',{url: this.url, title: this.title})
+        var data = {url: this.url, title: this.title, token: header.token}
+        $.post(base+'/posts',data)
          .done( (res) => {
             this.title = ''; this.url = '';
             document.location = '#posts';

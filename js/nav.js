@@ -2,16 +2,18 @@ $(document).ready(function() {
   window.location.hash = window.location.hash || '#posts'
   window.onhashchange = navigateToHash;
 
-  function updatePage(page) {
-    var pageLoader = window[page+'Update'];
-    if (pageLoader) pageLoader();
+  function updatePage(sec) {
+    var updaterFn = window[sec.attr('updater')]
+    if (updaterFn) updaterFn();
   }
 
-  function navigateToHash() {  
-    var sec = winHash();
+  function navigateToHash() {      
     $('body > section').hide();
-    $('#'+sec).show();
-    
+
+    var secName = winHash();
+    var sec = $('#'+secName);
+    sec.show();
+
     updatePage(sec);
     window.scrollTo(0,0);
   }
