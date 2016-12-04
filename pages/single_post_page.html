@@ -1,0 +1,112 @@
+<!-- item template -->
+<script type="text/x-template" id="single_comment">  
+  <li>
+    <div>
+      <span :class="{bold: false}" @click="toggle">
+        {{model.text}}        
+        <small><strong>({{model.user.name}}, {{model.created_at}})</strong></small>
+        <span v-if='false && model._id'>[{{open ? '-' : '+'}}]</span>
+      </span>
+      <span class='reply' v-if='false && model._id' @click='reply=!reply'>reply</span>
+    </div>
+
+    <ul v-show="open">
+      <single_comment
+        class="single_comment"
+        v-for="model in model.children"
+        :model="model">
+      </single_comment>      
+      <span v-if='model._id && reply'>
+        <textarea :class='model._id'></textarea>
+        <button class="add" @click="addChild(model._id)">add</button>
+      </span>
+    </ul>
+
+  </li>
+</script>
+
+<!-- markup -->
+<ul id='demo'>
+  <h3> {{current_post.title}}</h3>
+  <h4><a :href=current_post.url> {{current_post.url}}</a></h4>
+  <textarea v-model='new_top_comment'></textarea><button @click=submitTopComment()>submit</button>
+  <single_comment v-for="comment in comments"
+    class="single_comment"
+    :model="comment">
+  </single_comment>  
+</ul>
+
+<style>
+.single_comment {
+  cursor: pointer;
+  border:1px solid purple;
+}
+.reply {
+  color: blue;
+  font-weight: bold;
+  pointer: cursor;
+}
+</style>
+<script>
+Vue.component('single_comment', {
+  template: '#single_comment',
+  props: {
+    model: Object
+  },
+  data: function () {
+    return {
+      open: true,
+      reply: false
+    }
+  },
+  computed: { },
+  methods: {
+    toggle: function () { 
+      if (!this.model._id) return;
+      this.open = !this.open 
+    },
+    addChild: function (parentID) {      
+      var input = $('textarea.'+parentID);
+      var val = input.val();
+      input.val('');
+      if (!val) return alert('Cannot add an empty comment.')
+      if (!this.model.children) Vue.set(this.model, 'children', []);
+
+      $.post(base+'/comments',{text: val,post_id: this.model.current_post._id, parent_id:parentID});
+      this.model.children.push({text: val, user: header.user})
+    }
+  }
+})
+
+// boot up the demo
+cl = commentsList = new Vue({
+  el: '#demo',
+  data: {
+    comments: [],
+    current_post: {},
+    new_top_comment: null,
+    new_son_comment: null
+  },
+  methods: {    
+    update(){
+      var post_id = qs().p;
+      if (!post_id) return;
+      $.getJSON(base+'/posts/'+post_id).done((res)=>{
+        cl.current_post = res;
+        cl.comments = [];
+        cl.comments = res.comments;
+        cl.post_id = post_id;
+      });
+    },
+    submitTopComment(){
+      var data = {text: this.new_top_comment,post_id: this.current_post._id, token: header.token}
+      $.post(base+'/comments',data);
+      this.comments.unshift({text:this.new_top_comment, user: header.user, created_at: new Date});
+      this.new_top_comment = '';
+    }
+  }
+})  
+
+commentsUpdate = function() { cl.update(); }
+commentsUpdate();
+</script>
