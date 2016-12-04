@@ -1,21 +1,37 @@
 <div id='header-bar'>
-  <h3> DevHub Client </h3>
+  <h3> <a href='/'>DevHub Client 2</a></h3>
   <a href='#posts'>Posts</a>
   <a href='#comments' class='noDisplay'>Comments</a>
+  
   <span v-if='user._id'>
     <a href='#submit'>Submit</a>
     <a href='#me'>{{ user.name || user.email }}</a>
     <a href='#posts' @click=user={}>Logout</a>
   </span>
-    <a href='#login' v-else>Login</a>
+  <a href='#register_or_login' v-else>Register</a>
+
 </div>
 
 <script>
   var header = new Vue({
     el: '#header-bar',
     data: {
-      user: {_id: 123, email: 'foo@bar.com'},
+      user: {}, //{_id: 123, email: 'foo@bar.com'},
       prod: (window.location.hostname != 'localhost')
     }
   })  
+
+var token = qs().token || localStorage.getItem('token');
+if (token) {
+  $.post(base+'/users/login?token='+token)
+   .success( (res)=>{ 
+        header.user  = res.user;
+        header.token = res.token;
+        localStorage.setItem('token',header.token);
+      })
+    .fail(() => {
+        alert('Sorry, could not sign you in.');
+        document.location = '#register_or_login';
+    });
+}
 </script>

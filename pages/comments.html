@@ -4,6 +4,8 @@
     <div>
       <span :class="{bold: false}" @click="toggle">
         {{model.text}}
+        {{model.user}}
+        {{model.created_at}}
         <span v-if='false && model._id'>[{{open ? '-' : '+'}}]</span>
       </span>
       <span class='reply' v-if='false && model._id' @click='reply=!reply'>reply</span>
@@ -72,7 +74,7 @@ Vue.component('single_comment', {
       if (!this.model.children) Vue.set(this.model, 'children', []);
 
       $.post(base+'/comments',{text: val,post_id: this.model.current_post._id, parent_id:parentID});
-      this.model.children.push({text: val })
+      this.model.children.push({text: val, user: header.user})
     }
   }
 })
@@ -89,18 +91,17 @@ cl = commentsList = new Vue({
   methods: {    
     update(){
       var post_id = qs().p;
+      if (!post_id) return;
       $.getJSON(base+'/posts/'+post_id).done((res)=>{
         cl.current_post = res;
-      });
-      $.getJSON(base+'/comments?post_id='+post_id).done((res)=>{
         cl.comments = [];
-        cl.comments = res.items;
+        cl.comments = res.comments;
         cl.post_id = post_id;
       });
     },
     submitTopComment(){
       $.post(base+'/comments',{text: this.new_top_comment,post_id: this.current_post._id});
-      this.comments.unshift({text:this.new_top_comment});
+      this.comments.unshift({text:this.new_top_comment, user: header.user, created_at: new Date});
       this.new_top_comment = '';
     }
   }

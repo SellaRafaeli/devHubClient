@@ -12,7 +12,8 @@ $(document).ready(function() {
     $('body > section').hide();
     $('#'+sec).show();
     
-    updatePage(sec)
+    updatePage(sec);
+    window.scrollTo(0,0);
   }
 
   navigateToHash();

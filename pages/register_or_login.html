@@ -1,0 +1,49 @@
+<div id='register_or_login'>
+  <div v-if='show_thanks'>
+    Cool! We sent you an email with a sign-in link, click on it to login.
+  </div>
+
+  <div v-else>
+    <div>
+      <h3> Register </h3>
+      <form>
+        <input v-model=email placeholder='email'>
+        <input v-model=name placeholder='name'>      
+        <button type='button' @click='register()'>Register</button>
+      </form>
+    </div>
+
+    <div>
+      <h3> Login </h3>
+      <input v-model=existing_email placeholder='existing email'>
+      <button @click='request_signin_link()'>Get Sign-In Link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var register_or_login = new Vue({
+    el: '#register_or_login',
+    data: {
+      name: '',
+      email: '',
+      existing_email: '',
+      show_thanks: false
+    }, 
+    methods: {
+      register() {
+        if (!this.email || !this.name) return alert('Missing email or name.');
+        var data = {email: this.email, name: this.name};
+        $.post(base+'/users/register',data)
+         .success( (res) => this.show_thanks = true)
+         .fail( (res) => { var msg; if (msg = res.responseJSON.msg) alert(msg) })
+      },
+      request_signin_link(){
+        if (!this.existing_email) return alert('Missing email.');
+        $.post(base+'/users/request_signin_link',{email: this.existing_email})
+         .success( (res) => this.show_thanks = true)
+         .fail( (res) => { var msg; if (msg = res.responseJSON.msg) alert(msg) })
+      }
+    }
+  })  
+</script>

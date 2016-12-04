@@ -5,7 +5,7 @@ function getHTML(path, selector = 'body') {
 function log(str) { console.log(str) }
 
 function winHash() { 
-  return window.location.href.split("#")[1].split('?')[0];
+  return window.location.href.split("#")[1].split('?')[0].toString().toLowerCase();
 }
 
 qs = function winHashQSObj(){
@@ -17,3 +17,4 @@ function qsToObj(str) {
     if (!str) return {};
     var pieces = str.split("&"), data = {}, i, parts; for (i = 0; i < pieces.length; i++) {parts = pieces[i].split("="); if (parts.length < 2) {parts.push(""); } data[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]); } return data;
 }
+

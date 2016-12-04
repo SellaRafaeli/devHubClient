@@ -49,7 +49,7 @@ pl = postsList = new Vue({
     methods: {
       update(){
         $.getJSON(base+'/posts').done(function(res){
-          pl.posts = res.items;
+          pl.posts = res.posts;
         });
       }
     }
