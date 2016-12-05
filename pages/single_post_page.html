@@ -29,7 +29,12 @@
 <ul id='demo'>
   <h3> {{current_post.title}}</h3>
   <h4><a :href=current_post.url> {{current_post.url}}</a></h4>
-  <textarea v-model='new_top_comment'></textarea><button @click=submitTopComment()>submit</button>
+  
+  <div v-if='cu.name'>
+    <textarea v-model='new_top_comment'></textarea>
+    <button @click=submitTopComment()>submit</button>
+  </div>
+
   <single_comment v-for="comment in comments"
     class="single_comment"
     :model="comment">
@@ -59,7 +64,8 @@ Vue.component('single_comment', {
       reply: false
     }
   },
-  computed: { },
+  computed: {     
+  },
   methods: {
     toggle: function () { 
       if (!this.model._id) return;
@@ -86,6 +92,10 @@ cl = commentsList = new Vue({
     current_post: {},
     new_top_comment: null,
     new_son_comment: null
+  },
+  computed: {
+    bla() { return 101},
+    cu() { return header.user }
   },
   methods: {    
     update(){
