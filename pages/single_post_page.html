@@ -1,22 +1,30 @@
 <!-- item template -->
+<style>
+.single_comment {
+  margin-top: 20px;
+}
+</style>
 <script type="text/x-template" id="single_comment">  
   <li>
     <div>
       <span :class="{bold: false}" @click="toggle">
+        
+        <div><small><strong>{{model.user && model.user.name}}, ({{niceTimeW(model.created_at)}})</strong></small></div>
         {{model.text}}        
-        <small><strong>({{model.user.name}}, {{model.created_at}})</strong></small>
-        <span v-if='false && model._id'>[{{open ? '-' : '+'}}]</span>
+        <span v-if='false && model._id'>[{{open ? '-' : '+'}}]</span>        
       </span>
-      <span class='reply' v-if='false && model._id' @click='reply=!reply'>reply</span>
+      <span class='reply' v-if='cl.cu.name && model._id' @click='reply=!reply'>reply</span>
     </div>
 
     <ul v-show="open">
       <single_comment
         class="single_comment"
-        v-for="model in model.children"
-        :model="model">
+        zstyle='border:1px solid red; min-height: 20px'
+        v-for="child in model.children"
+        :model="child">
       </single_comment>      
-      <span v-if='model._id && reply'>
+
+      <span v-if='cl.cu.name && model._id && reply'>
         <textarea :class='model._id'></textarea>
         <button class="add" @click="addChild(model._id)">add</button>
       </span>
@@ -61,12 +69,14 @@ Vue.component('single_comment', {
   data: function () {
     return {
       open: true,
-      reply: false
+      reply: false,
+      cl: cl,
     }
   },
   computed: {     
   },
   methods: {
+    niceTimeW(time) { return niceTime(time) },
     toggle: function () { 
       if (!this.model._id) return;
       this.open = !this.open 
@@ -77,9 +87,9 @@ Vue.component('single_comment', {
       input.val('');
       if (!val) return alert('Cannot add an empty comment.')
       if (!this.model.children) Vue.set(this.model, 'children', []);
-
-      $.post(base+'/comments',{text: val,post_id: this.model.current_post._id, parent_id:parentID});
-      this.model.children.push({text: val, user: header.user})
+debugger
+      $.post(base+'/comments',{text: val, post_id: cl.current_post._id, parent_id: parentID});
+      this.model.children.push({text: val, user: header.user, created_at: new Date})
     }
   }
 })
@@ -97,7 +107,7 @@ cl = commentsList = new Vue({
     bla() { return 101},
     cu() { return header.user }
   },
-  methods: {    
+  methods: {      
     update(){
       var post_id = qs().p;
       if (!post_id) return;

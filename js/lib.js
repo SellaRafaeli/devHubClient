@@ -8,6 +8,11 @@ function winHash() {
   return window.location.href.split("#")[1].split('?')[0].toString().toLowerCase();
 }
 
+function niceTime(timestamp){
+  var z = new Date(timestamp);
+  return z.toLocaleString();
+}
+
 qs = function winHashQSObj(){
   var qs = window.location.href.split("#")[1].toString().split('?')[1];
   return qsToObj(qs);

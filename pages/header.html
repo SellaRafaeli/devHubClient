@@ -28,6 +28,7 @@ if (token) {
         header.user  = res.user;
         header.token = res.token;
         localStorage.setItem('token',header.token);
+        $.ajaxSetup({data: {token: header.token}}); //append to all $.post
       })
     .fail(() => {
         alert('Sorry, could not sign you in.');
