@@ -69,41 +69,8 @@
 .reply:hover { text-decoration: underline; }
 
 </style>
-<script>
-Vue.component('single_comment', {
-  template: '#single_comment',
-  props: {
-    model: Object
-  },
-  data: function () {
-    return {
-      open: true,
-      reply: false,
-      cl: cl,
-    }
-  },
-  computed: {     
-  },
-  methods: {
-    niceTimeW(time) { return niceTime(time) },
-    toggle: function () { 
-      if (!this.model._id) return;
-      this.open = !this.open 
-    },
-    addChild: function (parentID) {      
-      var input = $('textarea.'+parentID);
-      var val = input.val();
-      input.val('');
-      if (!val) return alert('Cannot add an empty comment.')
-      if (!this.model.children) Vue.set(this.model, 'children', []);
-debugger
-      $.post(base+'/comments',{text: val, post_id: cl.current_post._id, parent_id: parentID});
-      this.model.children.push({text: val, user: header.user, created_at: new Date})
-    }
-  }
-})
 
-// boot up the demo
+<script>
 cl = commentsList = new Vue({
   el: '#demo',
   data: {
@@ -135,6 +102,39 @@ cl = commentsList = new Vue({
     }
   }
 })  
+
+Vue.component('single_comment', {
+  template: '#single_comment',
+  props: {
+    model: Object
+  },
+  data: function () {
+    return {
+      open: true,
+      reply: false,
+      cl: cl,
+    }
+  },
+  computed: {     
+  },
+  methods: {
+    niceTimeW(time) { return niceTime(time) },
+    toggle: function () { 
+      if (!this.model._id) return;
+      this.open = !this.open 
+    },
+    addChild: function (parentID) {      
+      var input = $('textarea.'+parentID);
+      var val = input.val();
+      input.val('');
+      if (!val) return alert('Cannot add an empty comment.')
+      if (!this.model.children) Vue.set(this.model, 'children', []);
+      $.post(base+'/comments',{text: val, post_id: cl.current_post._id, parent_id: parentID});
+      this.model.children.push({text: val, user: header.user, created_at: new Date})
+    }
+  }
+});
+
 
 commentsUpdate = function() { cl.update(); }
 commentsUpdate();
