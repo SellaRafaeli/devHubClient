@@ -1,19 +1,26 @@
 <!-- item template -->
-<style>
-.single_comment {
-  margin-top: 20px;
-}
-</style>
 <script type="text/x-template" id="single_comment">  
   <li>
     <div>
-      <span :class="{bold: false}" @click="toggle">
-        
-        <div><small><strong>{{model.user && model.user.name}}, ({{niceTimeW(model.created_at)}})</strong></small></div>
-        {{model.text}}        
-        <span v-if='false && model._id'>[{{open ? '-' : '+'}}]</span>        
+      <span :class="{bold: false}" >
+        <div>
+          <span v-if='model._id' @click='toggle'>[{{open ? '-' : '+'}}]</span>        
+          <small><strong>{{model.user && model.user.name}},</strong>
+          <small>{{niceTimeW(model.created_at)}}</small>
+          <span class='reply' v-if='cl.cu && cl.cu.name && model._id' @click='reply=!reply'>reply</span>                  
+        </div>
+
+        <article>
+          {{model.text}}        
+        </article>
+
+        <div>
+          <span v-if='cl.cu.name && model._id && reply'>
+            <textarea :class='model._id'></textarea>
+            <button class="add" @click="addChild(model._id)">add</button>
+          </span>
+        </div>                
       </span>
-      <span class='reply' v-if='cl.cu.name && model._id' @click='reply=!reply'>reply</span>
     </div>
 
     <ul v-show="open">
@@ -22,12 +29,7 @@
         zstyle='border:1px solid red; min-height: 20px'
         v-for="child in model.children"
         :model="child">
-      </single_comment>      
-
-      <span v-if='cl.cu.name && model._id && reply'>
-        <textarea :class='model._id'></textarea>
-        <button class="add" @click="addChild(model._id)">add</button>
-      </span>
+      </single_comment>            
     </ul>
 
   </li>
@@ -52,13 +54,16 @@
 <style>
 .single_comment {
   cursor: pointer;
-  border:1px solid purple;
+  /*border:1px solid purple;*/
+  margin: 20px;
 }
 .reply {
   color: blue;
   font-weight: bold;
   pointer: cursor;
 }
+.reply:hover { text-decoration: underline; }
+
 </style>
 <script>
 Vue.component('single_comment', {
