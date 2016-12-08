@@ -1,11 +1,14 @@
 <!-- item template -->
 <script type="text/x-template" id="single_post_template">
-  <li>
+  <li style='margin:10px'>
     <div
       :class="{bold: false}"
-      @click="toggle">
-      {{post.title}}  
-      ({{post.user.name}})    
+      @click="toggle"
+      style='margin:5px'
+      >
+      <a :href='post.url' target='_blank'>{{post.title}}</a>      
+      <small>({{post.user.name}}, {{niceTimeW(post.created_at)}})</small>
+
     </div>
     <a :href='"#single_post_page?p="+post._id'>{{post.num_comments}} comments</a>
   </li>
@@ -37,6 +40,7 @@ Vue.component('single_post', {
     toggle: function () { 
       this.upvoted = !this.upvoted; 
     },
+    niceTimeW(time) { return niceTime(time)} 
   }
 })
 </script>
