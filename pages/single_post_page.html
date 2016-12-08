@@ -15,8 +15,6 @@
           {{model.text}}        
         </article>
 
-        <div v-show=isAdmin><button>delete comment</button></div>
-
         <div>
           <span v-if='cl.cu && cl.cu.name && model._id && reply'>
             <textarea :class='model._id'></textarea>
@@ -40,10 +38,6 @@
 
 <!-- markup -->
 <ul id='demo'>
-  <div v-if='isAdmin'>
-    <button>delete this post</button>
-  </div>
-
   <h3> {{current_post.title}}</h3>
   <h4><a :href=current_post.url> {{current_post.url}}</a></h4>
   
@@ -84,8 +78,7 @@ var cl = commentsList = new Vue({
   },
   computed: {
     bla() { return 101},
-    cu() { return header.user },
-    isAdmin() { try { return header && header.user && header.user.email == "sella.rafaeli@gmail.com" } catch(e) { return false}}
+    cu() { return header.user }
   },
   methods: {      
     update(){
@@ -116,8 +109,7 @@ Vue.component('single_comment', {
     return {
       open: true,
       reply: false,
-      cl: cl,
-      isAdmin: cl && cl.isAdmin
+      cl: cl
     }
   },
   computed: {     
