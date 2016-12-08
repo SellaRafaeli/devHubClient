@@ -41,7 +41,7 @@
   <h3> {{current_post.title}}</h3>
   <h4><a :href=current_post.url> {{current_post.url}}</a></h4>
   
-  <div v-if='header.cu && header.cu.name'>
+  <div v-if='header.user && header.user.name'>
     <textarea v-model='new_top_comment'></textarea>
     <button @click=submitTopComment()>submit</button>
   </div>
