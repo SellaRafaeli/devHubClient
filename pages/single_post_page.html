@@ -1,14 +1,11 @@
 <!-- item template -->
-<div v-if='header && header.email == "sella.rafaeli@gmail.com"'>
-
-</div>
-
 <script type="text/x-template" id="single_comment">  
+  
   <li>
     <div>
       <span :class="{bold: false}" >
         <div>
-          <span v-if='model._id' @click='toggle'>[{{open ? '-' : '+'}}]</span>        
+          <span v-if='model._id' @click='toggle'>[{{open ? '-' : '+'}}]</span>       
           <small><strong>{{model.user && model.user.name}},</strong>
           <small>{{niceTimeW(model.created_at)}}</small>
           <span class='reply' v-if='cl.cu && cl.cu.name && model._id' @click='reply=!reply'>reply</span>                  
@@ -17,6 +14,8 @@
         <article>
           {{model.text}}        
         </article>
+
+        <div v-show=isAdmin><button>delete comment</button></div>
 
         <div>
           <span v-if='cl.cu && cl.cu.name && model._id && reply'>
@@ -41,6 +40,10 @@
 
 <!-- markup -->
 <ul id='demo'>
+  <div v-if='isAdmin'>
+    <button>delete this post</button>
+  </div>
+
   <h3> {{current_post.title}}</h3>
   <h4><a :href=current_post.url> {{current_post.url}}</a></h4>
   
@@ -71,7 +74,7 @@
 </style>
 
 <script>
-cl = commentsList = new Vue({
+var cl = commentsList = new Vue({
   el: '#demo',
   data: {
     comments: [],
@@ -81,7 +84,8 @@ cl = commentsList = new Vue({
   },
   computed: {
     bla() { return 101},
-    cu() { return header.user }
+    cu() { return header.user },
+    isAdmin() { try { return header && header.user && header.user.email == "sella.rafaeli@gmail.com" } catch(e) { return false}}
   },
   methods: {      
     update(){
@@ -113,6 +117,7 @@ Vue.component('single_comment', {
       open: true,
       reply: false,
       cl: cl,
+      isAdmin: cl && cl.isAdmin
     }
   },
   computed: {     
